@@ -1,34 +1,73 @@
-function confirmCallSlot() {
-  var name = document.getElementById("name").value;
-  var email = document.getElementById("email").value;
-  var phone = document.getElementById("phone").value;
-  var callDate = document.getElementById("callTimeDate").value;
-  var callTime = document.getElementById("callTime").value;
+document.addEventListener("DOMContentLoaded", function () {
+  const form = document.getElementById("myForm");
+  const nameInput = document.getElementById("name");
+  const emailInput = document.getElementById("email");
+  const phoneInput = document.getElementById("phone");
+  const callDataInput = document.getElementById("callData");
+  const callTimeInput = document.getElementById("callTime");
+  const submitButton = document.getElementById("submit");
+  const tableBody = document.getElementById("tableBody");
 
-  if (phone.length !== 10) {
-    alert("Phone number should be exactly 10 digits.");
-    return;
+  submitButton.addEventListener("click", function () {
+    const name = nameInput.value;
+    const email = emailInput.value;
+    const phone = phoneInput.value;
+    const callData = callDataInput.value;
+    const callTime = callTimeInput.value;
+
+    if (name && email && phone && callData && callTime) {
+      const rowData = [name, email, phone, callData, callTime];
+      addToLocalStorage(rowData);
+      updateTable();
+      clearFormInputs();
+    } else {
+      alert("Please fill in all fields.");
+    }
+  });
+
+  function addToLocalStorage(data) {
+    let existingData = JSON.parse(localStorage.getItem("callDataArray")) || [];
+    existingData.push(data);
+    localStorage.setItem("callDataArray", JSON.stringify(existingData));
   }
 
-  // Retrieve existing user details or initialize an empty array
-  var existingUserDetails =
-    JSON.parse(localStorage.getItem("userDetails")) || [];
+  function updateTable() {
+    const data = JSON.parse(localStorage.getItem("callDataArray")) || [];
 
-  // Create an object for the current user
-  var userDetails = {
-    name: name,
-    email: email,
-    phone: phone,
-    callDate: callDate,
-    callTime: callTime,
-  };
+    let tableHTML = "";
+    data.forEach(function (row, index) {
+      tableHTML += "<tr>";
+      row.forEach(function (cell) {
+        tableHTML += `<td>${cell}</td>`;
+      });
+      tableHTML += `<td><button class="delete" data-index="${index}">Delete</button></td></tr>`;
+    });
 
-  // Add the current user's details to the array
-  existingUserDetails.push(userDetails);
+    tableBody.innerHTML = tableHTML;
 
-  // Store the updated array in local storage
-  localStorage.setItem("userDetails", JSON.stringify(existingUserDetails));
+    const deleteButtons = document.querySelectorAll(".delete");
+    deleteButtons.forEach(function (button) {
+      button.addEventListener("click", function () {
+        const index = parseInt(button.getAttribute("data-index"));
+        deleteFromLocalStorage(index);
+        updateTable();
+      });
+    });
+  }
 
-  // Reset the form
-  document.querySelector("form").reset();
-}
+  function deleteFromLocalStorage(index) {
+    let data = JSON.parse(localStorage.getItem("callDataArray")) || [];
+    data.splice(index, 1);
+    localStorage.setItem("callDataArray", JSON.stringify(data));
+  }
+
+  function clearFormInputs() {
+    nameInput.value = "";
+    emailInput.value = "";
+    phoneInput.value = "";
+    callDataInput.value = "";
+    callTimeInput.value = "";
+  }
+
+  updateTable();
+});
