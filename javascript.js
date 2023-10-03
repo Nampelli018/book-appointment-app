@@ -10,6 +10,11 @@ function confirmCallSlot() {
     return;
   }
 
+  // Retrieve existing user details or initialize an empty array
+  var existingUserDetails =
+    JSON.parse(localStorage.getItem("userDetails")) || [];
+
+  // Create an object for the current user
   var userDetails = {
     name: name,
     email: email,
@@ -18,7 +23,12 @@ function confirmCallSlot() {
     callTime: callTime,
   };
 
-  localStorage.setItem("userDetails", JSON.stringify(userDetails));
+  // Add the current user's details to the array
+  existingUserDetails.push(userDetails);
 
+  // Store the updated array in local storage
+  localStorage.setItem("userDetails", JSON.stringify(existingUserDetails));
+
+  // Reset the form
   document.querySelector("form").reset();
 }
