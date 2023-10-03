@@ -76,67 +76,67 @@
       }
     </style>
   </head>
-
   <body>
-    <div class="container mt-5">
-      <form id="myForm">
-        <h1 class="text-center">Book a call</h1>
-        <p class="text-center">
-          Book a call slot, and our representative will call you within 1hr of
-          the selected time
-        </p>
-        <hr />
-        <div class="mb-3">
-          <label for="name" class="form-label">Name:</label>
-          <input type="text" class="form-control" id="name" name="name" />
-        </div>
-        <div class="mb-3">
-          <label for="email" class="form-label">Email:</label>
-          <input type="email" class="form-control" id="email" name="email" />
-        </div>
-        <div class="mb-3">
-          <label for="phone" class="form-label">Phone:</label>
-          <input type="number" class="form-control" id="phone" name="phone" />
-        </div>
-        <div class="mb-3">
-          <label class="form-label">Time for call:</label>
-          <div class="row">
-            <div class="col-md-6">
-              <input
-                type="date"
-                class="form-control"
-                id="callData"
-                name="callData"
-              />
-            </div>
-            <div class="col-md-6">
-              <input
-                type="time"
-                class="form-control"
-                id="callTime"
-                name="callTime"
-              />
-            </div>
+    <form id="myForm">
+      <h1 class="text-center">Book a call</h1>
+      <p class="text-center">
+        Book a call slot, and our representative will call you within 1hr of the
+        selected time
+      </p>
+      <hr />
+      <div class="mb-3">
+        <label for="name" class="form-label">Name:</label>
+        <input type="text" class="form-control" id="name" name="name" />
+      </div>
+      <div class="mb-3">
+        <label for="email" class="form-label">Email:</label>
+        <input type="email" class="form-control" id="email" name="email" />
+      </div>
+      <div class="mb-3">
+        <label for="phone" class="form-label">Phone:</label>
+        <input type="number" class="form-control" id="phone" name="phone" />
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Time for call:</label>
+        <div class="row">
+          <div class="col-md-6">
+            <input
+              type="date"
+              class="form-control"
+              id="callData"
+              name="callData"
+            />
+          </div>
+          <div class="col-md-6">
+            <input
+              type="time"
+              class="form-control"
+              id="callTime"
+              name="callTime"
+            />
           </div>
         </div>
-        <div class="form-group-button">
-          <button type="button" class="btn btn-success btn-submit" id="submit">
-            GET A CALL
-          </button>
-        </div>
-      </form>
-    </div>
+      </div>
+      <div class="form-group-button">
+        <button type="button" class="btn btn-success btn-submit" id="submit">
+          GET A CALL
+        </button>
+      </div>
+    </form>
     <table id="dataTable">
       <thead>
         <tr>
           <th>Name</th>
           <th>Email</th>
           <th>Phone</th>
-          <th>Time for call</th>
+          <th>Call Data</th>
+          <th>Call Time</th>
+          <th>Action</th>
         </tr>
       </thead>
       <tbody id="tableBody"></tbody>
     </table>
+
     <script src="javascript.js"></script>
   </body>
 </html>

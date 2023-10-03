@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const callTimeInput = document.getElementById("callTime");
   const submitButton = document.getElementById("submit");
   const tableBody = document.getElementById("tableBody");
+  let editIndex = -1; // Track the index for editing
 
   submitButton.addEventListener("click", function () {
     const name = nameInput.value;
@@ -17,7 +18,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (name && email && phone && callData && callTime) {
       const rowData = [name, email, phone, callData, callTime];
-      addToLocalStorage(rowData);
+
+      if (editIndex !== -1) {
+        editInLocalStorage(rowData, editIndex);
+        editIndex = -1; // Reset the edit index
+        submitButton.textContent = "Submit";
+      } else {
+        addToLocalStorage(rowData);
+      }
+
       updateTable();
       clearFormInputs();
     } else {
@@ -31,6 +40,12 @@ document.addEventListener("DOMContentLoaded", function () {
     localStorage.setItem("callDataArray", JSON.stringify(existingData));
   }
 
+  function editInLocalStorage(data, index) {
+    let existingData = JSON.parse(localStorage.getItem("callDataArray")) || [];
+    existingData[index] = data;
+    localStorage.setItem("callDataArray", JSON.stringify(existingData));
+  }
+
   function updateTable() {
     const data = JSON.parse(localStorage.getItem("callDataArray")) || [];
 
@@ -40,10 +55,21 @@ document.addEventListener("DOMContentLoaded", function () {
       row.forEach(function (cell) {
         tableHTML += `<td>${cell}</td>`;
       });
+      tableHTML += `<td><button class="edit" data-index="${index}">Edit</button></td>`;
       tableHTML += `<td><button class="delete" data-index="${index}">Delete</button></td></tr>`;
     });
 
     tableBody.innerHTML = tableHTML;
+
+    const editButtons = document.querySelectorAll(".edit");
+    editButtons.forEach(function (button) {
+      button.addEventListener("click", function () {
+        const index = parseInt(button.getAttribute("data-index"));
+        editIndex = index; // Set the edit index
+        populateFormWithOldData(index);
+        submitButton.textContent = "Edit";
+      });
+    });
 
     const deleteButtons = document.querySelectorAll(".delete");
     deleteButtons.forEach(function (button) {
@@ -53,6 +79,17 @@ document.addEventListener("DOMContentLoaded", function () {
         updateTable();
       });
     });
+  }
+
+  function populateFormWithOldData(index) {
+    const data = JSON.parse(localStorage.getItem("callDataArray")) || [];
+    if (data[index]) {
+      nameInput.value = data[index][0];
+      emailInput.value = data[index][1];
+      phoneInput.value = data[index][2];
+      callDataInput.value = data[index][3];
+      callTimeInput.value = data[index][4];
+    }
   }
 
   function deleteFromLocalStorage(index) {
