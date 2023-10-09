@@ -7,6 +7,7 @@
     />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" type="text/css" href="styles.css" />
+    <title>Expenses Tracker</title>
     <style>
       form {
         max-width: 700px;
@@ -25,7 +26,6 @@
         text-align: center;
       }
       body {
-        background-image: url("img.jpg");
         background-repeat: no-repeat;
         background-attachment: fixed;
         background-size: cover;
@@ -78,58 +78,48 @@
   </head>
   <body>
     <form id="myForm">
-      <h1 class="text-center">Book a call</h1>
-      <p class="text-center">
-        Book a call slot, and our representative will call you within 1hr of the
-        selected time
-      </p>
+      <h1 class="text-center">Expenses Tracker</h1>
+      <p class="text-center">Make your expenses tally in a easy way.</p>
       <hr />
       <div class="mb-3">
-        <label for="name" class="form-label">Name:</label>
-        <input type="text" class="form-control" id="name" name="name" />
+        <label for="amount" class="form-label">Choose Expense Amount:</label>
+        <input type="number" class="form-control" id="amount" name="amount" />
       </div>
       <div class="mb-3">
-        <label for="email" class="form-label">Email:</label>
-        <input type="email" class="form-control" id="email" name="email" />
+        <label for="description" class="form-label">Choose Description:</label>
+        <input
+          type="text"
+          class="form-control"
+          id="description"
+          name="description"
+        />
       </div>
       <div class="mb-3">
-        <label for="phone" class="form-label">Phone:</label>
-        <input type="number" class="form-control" id="phone" name="phone" />
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Time for call:</label>
-        <div class="row">
-          <div class="col-md-6">
-            <input
-              type="date"
-              class="form-control"
-              id="callData"
-              name="callData"
-            />
-          </div>
-          <div class="col-md-6">
-            <input
-              type="time"
-              class="form-control"
-              id="callTime"
-              name="callTime"
-            />
-          </div>
-        </div>
+        <label for="category" class="form-label">Choose a category:</label>
+        <select type="text" class="form-control" id="category" name="category">
+          <option value="none" selected disabled hidden>Choose</option>
+          <option value="movie">Movie</option>
+          <option value="clothing">Clothing</option>
+          <option value="food">Food</option>
+          <option value="fees">Fees</option>
+          <option value="fuel">Fuel</option>
+          <option value="electricity">Electricity</option>
+        </select>
       </div>
       <div class="form-group-button">
         <button type="button" class="btn btn-success btn-submit" id="submit">
-          GET A CALL
+          Add Expense
         </button>
       </div>
     </form>
-    <table id="dataTable">
-      <thead>
+    <table id="dataTable" class="table table-striped mt-5 mb-5">
+      <thead class="table-dark text-white">
         <tr>
-          <th>Name</th>
-          <th>Email</th>
-          <th>Phone</th>
-          <th>Time for call</th>
+          <th>Product Expense Amount</th>
+          <th>Product Description</th>
+          <th>Product Category</th>
+          <th>Edit Action</th>
+          <th>Delete Action</th>
         </tr>
       </thead>
       <tbody id="tableBody"></tbody>

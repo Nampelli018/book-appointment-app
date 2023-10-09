@@ -1,10 +1,8 @@
 document.addEventListener("DOMContentLoaded", function () {
   const form = document.getElementById("myForm");
-  const nameInput = document.getElementById("name");
-  const emailInput = document.getElementById("email");
-  const phoneInput = document.getElementById("phone");
-  const callDataInput = document.getElementById("callData");
-  const callTimeInput = document.getElementById("callTime");
+  const nameInput = document.getElementById("amount");
+  const emailInput = document.getElementById("description");
+  const phoneInput = document.getElementById("category");
   const submitButton = document.getElementById("submit");
   const tableBody = document.getElementById("tableBody");
   let editIndex = -1; // Track the index for editing
@@ -13,11 +11,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const name = nameInput.value;
     const email = emailInput.value;
     const phone = phoneInput.value;
-    const callData = callDataInput.value;
-    const callTime = callTimeInput.value;
 
-    if (name && email && phone && callData && callTime) {
-      const rowData = [name, email, phone, callData, callTime];
+    if (name && email && phone) {
+      const rowData = [name, email, phone];
 
       if (editIndex !== -1) {
         editInLocalStorage(rowData, editIndex);
@@ -55,8 +51,8 @@ document.addEventListener("DOMContentLoaded", function () {
       row.forEach(function (cell) {
         tableHTML += `<td>${cell}</td>`;
       });
-      tableHTML += `<td><button class="edit" data-index="${index}">Edit</button></td>`;
-      tableHTML += `<td><button class="delete" data-index="${index}">Delete</button></td></tr>`;
+      tableHTML += `<td><button class="edit btn btn-success" data-index="${index}">Edit Expense</button></td>`;
+      tableHTML += `<td><button class="delete btn btn-danger" data-index="${index}">Delete Expense</button></td></tr>`;
     });
 
     tableBody.innerHTML = tableHTML;
@@ -87,8 +83,6 @@ document.addEventListener("DOMContentLoaded", function () {
       nameInput.value = data[index][0];
       emailInput.value = data[index][1];
       phoneInput.value = data[index][2];
-      callDataInput.value = data[index][3];
-      callTimeInput.value = data[index][4];
     }
   }
 
@@ -102,8 +96,6 @@ document.addEventListener("DOMContentLoaded", function () {
     nameInput.value = "";
     emailInput.value = "";
     phoneInput.value = "";
-    callDataInput.value = "";
-    callTimeInput.value = "";
   }
 
   updateTable();
