@@ -9,12 +9,27 @@ $(document).ready(function () {
       <td>${appointment.name}</td>
       <td>${appointment.email}</td>
       <td>${appointment.phone}</td>
+      <td>${appointment.callData} ${appointment.callTime}</td>
       <td><button class="edit" data-index="${index}">Edit</button></td>
       <td><button class="delete" data-index="${index}">Delete</button></td>
     `;
 
     // Append the new row to the table
     tableBody.appendChild(newRow);
+  }
+
+  // Function to update an appointment in Crudcrud
+  function updateAppointmentInCrudcrud(data, id) {
+    const crudcrudEndpoint = `https://crudcrud.com/api/6354cb3298c846859ae893200a83e785/appointmentData/${id}`;
+
+    axios
+      .put(crudcrudEndpoint, data)
+      .then((response) => {
+        // Handle the response if needed
+      })
+      .catch((err) => {
+        console.error("Error updating data in Crudcrud:", err);
+      });
   }
 
   const form = document.getElementById("myForm");
@@ -42,12 +57,27 @@ $(document).ready(function () {
         callTime: callTime,
       };
 
-      // Add the appointment to the table and send it to Crudcrud
-      addAppointmentToTable(appointment, savedCallData.length);
-      sendToCrudcrud(appointment);
+      if (submitButton.textContent === "Edit") {
+        const editIndex = submitButton.getAttribute("data-edit-index");
+        const appointmentId = savedCallData[editIndex]._id; // Assuming _id is present
 
-      // Reset the form
-      clearFormInputs();
+        updateAppointmentInCrudcrud(appointment, appointmentId);
+
+        // Update the local data (optional, if needed)
+        savedCallData[editIndex] = appointment;
+
+        // Update the table
+        updateTable();
+
+        // Reset the form
+        clearFormInputs();
+      } else {
+        // Add the appointment to the table and send it to Crudcrud
+        sendToCrudcrud(appointment);
+
+        // Reset the form
+        clearFormInputs();
+      }
     } else {
       alert("Please fill in all fields.");
     }
@@ -56,12 +86,11 @@ $(document).ready(function () {
   function deleteAppointment(index) {
     const appointmentToDelete = savedCallData[index];
     if (appointmentToDelete) {
-      const crudcrudEndpoint = `https://crudcrud.com/api/6c69ec4a8dc84965b7659947263445c1/appontmenData/${appointmentToDelete._id}`;
+      const crudcrudEndpoint = `https://crudcrud.com/api/6354cb3298c846859ae893200a83e785/appointmentData/${appointmentToDelete._id}`;
 
       axios
         .delete(crudcrudEndpoint)
         .then((response) => {
-          // Handle the response if needed
           savedCallData.splice(index, 1); // Remove data from the array
           updateTable(); // Update the table after successful deletion
         })
@@ -86,15 +115,14 @@ $(document).ready(function () {
 
     tableBody.innerHTML = tableHTML;
 
+    // Add event listeners for editing and deleting
     const editButtons = document.querySelectorAll(".edit");
     editButtons.forEach(function (button) {
       button.addEventListener("click", function () {
         const index = parseInt(button.getAttribute("data-index"));
         populateFormWithOldData(index);
         submitButton.textContent = "Edit";
-
-        // Remove the row for editing
-        tableBody.removeChild(button.parentElement.parentElement);
+        submitButton.setAttribute("data-edit-index", index);
       });
     });
 
@@ -106,14 +134,6 @@ $(document).ready(function () {
       });
     });
   }
-
-  const deleteButtons = document.querySelectorAll(".delete");
-  deleteButtons.forEach(function (button) {
-    button.addEventListener("click", function () {
-      const index = parseInt(button.getAttribute("data-index"));
-      deleteAppointment(index);
-    });
-  });
 
   function populateFormWithOldData(index) {
     const data = savedCallData[index];
@@ -133,18 +153,18 @@ $(document).ready(function () {
     callDataInput.value = "";
     callTimeInput.value = "";
     submitButton.textContent = "GET A CALL";
+    submitButton.removeAttribute("data-edit-index");
   }
 
   // Send the data to Crudcrud
   function sendToCrudcrud(data) {
     const crudcrudEndpoint =
-      "https://crudcrud.com/api/6c69ec4a8dc84965b7659947263445c1/appontmenData"; // Replace with your actual Crudcrud API endpoint
+      "https://crudcrud.com/api/6354cb3298c846859ae893200a83e785/appointmentData"; // Replace with your actual Crudcrud API endpoint
 
     axios
       .post(crudcrudEndpoint, data)
       .then((response) => {
-        // Handle the response if needed
-        savedCallData.push(data); // Add data to the array
+        savedCallData.push(response.data); // Add data to the array
         updateTable(); // Update the table after receiving a response
       })
       .catch((err) => {
@@ -155,7 +175,7 @@ $(document).ready(function () {
   // Load saved data on page load
   axios
     .get(
-      "https://crudcrud.com/api/6c69ec4a8dc84965b7659947263445c1/appontmenData"
+      "https://crudcrud.com/api/6354cb3298c846859ae893200a83e785/appointmentData"
     )
     .then((response) => {
       savedCallData = response.data;
