@@ -54,8 +54,21 @@ $(document).ready(function () {
   });
 
   function deleteAppointment(index) {
-    savedCallData.splice(index, 1);
-    updateTable();
+    const appointmentToDelete = savedCallData[index];
+    if (appointmentToDelete) {
+      const crudcrudEndpoint = `https://crudcrud.com/api/6c69ec4a8dc84965b7659947263445c1/appontmenData/${appointmentToDelete._id}`;
+
+      axios
+        .delete(crudcrudEndpoint)
+        .then((response) => {
+          // Handle the response if needed
+          savedCallData.splice(index, 1); // Remove data from the array
+          updateTable(); // Update the table after successful deletion
+        })
+        .catch((err) => {
+          console.error("Error deleting data from Crudcrud:", err);
+        });
+    }
   }
 
   function updateTable() {
@@ -94,6 +107,14 @@ $(document).ready(function () {
     });
   }
 
+  const deleteButtons = document.querySelectorAll(".delete");
+  deleteButtons.forEach(function (button) {
+    button.addEventListener("click", function () {
+      const index = parseInt(button.getAttribute("data-index"));
+      deleteAppointment(index);
+    });
+  });
+
   function populateFormWithOldData(index) {
     const data = savedCallData[index];
     if (data) {
@@ -117,7 +138,7 @@ $(document).ready(function () {
   // Send the data to Crudcrud
   function sendToCrudcrud(data) {
     const crudcrudEndpoint =
-      "https://crudcrud.com/api/307db7265d1245e6abf490120ab1f1fe/appointmentappData"; // Replace with your actual Crudcrud API endpoint
+      "https://crudcrud.com/api/6c69ec4a8dc84965b7659947263445c1/appontmenData"; // Replace with your actual Crudcrud API endpoint
 
     axios
       .post(crudcrudEndpoint, data)
@@ -134,7 +155,7 @@ $(document).ready(function () {
   // Load saved data on page load
   axios
     .get(
-      "https://crudcrud.com/api/307db7265d1245e6abf490120ab1f1fe/appointmentappData"
+      "https://crudcrud.com/api/6c69ec4a8dc84965b7659947263445c1/appontmenData"
     )
     .then((response) => {
       savedCallData = response.data;
